@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Täffä Menü</string>
+    <string name="widget_text">Uppdaterar...</string>
+    <string name="app_description">En widget som visar dagsens meny.</string>
+    <string name="widget_header">Täffä Menü</string>
+    <string name="widget_update">Uppdatera</string>
+</resources>

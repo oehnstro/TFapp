@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="160dp"
+    android:layout_height="200dp"
+    android:background="@drawable/bg2x2" android:gravity="left">
+    <TextView android:id="@+id/textHeader" android:textAppearance="?android:attr/textAppearanceMedium" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_alignParentTop="true" android:layout_centerHorizontal="true" android:text="@string/widget_header" android:textColor="@color/teknologrod" android:textStyle="bold" android:clickable="true" android:layout_marginTop="10dip"></TextView>
+    <TextView android:id="@+id/textMenu" android:layout_height="wrap_content" android:layout_width="wrap_content" android:layout_below="@+id/textHeader" android:layout_alignParentLeft="true" android:textColor="@color/black" android:text="@string/widget_text" android:layout_marginLeft="15dip" android:layout_marginRight="15dip" android:textSize="11dip"></TextView>
+
+</RelativeLayout>
