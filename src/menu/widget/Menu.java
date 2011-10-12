@@ -6,12 +6,14 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
 import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Date;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.IBinder;
+import android.text.format.DateFormat;
 import android.widget.RemoteViews;
 
 public class Menu extends Service {
@@ -21,18 +23,24 @@ public class Menu extends Service {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
 
-		
-		//Check time. If after 16:00 show tomorrow's menu.
+		// Check time. If after 16:00 show tomorrow's menu.
 		int tomorrow = 0;
 		Date d = new Date();
-		if (d.getHours() >= 16)
+		if (d.getHours() >= 16) {
 			tomorrow = 1;
+			d.setDate(d.getDate() + 1);
+			while (d.getDay() == 7
+					|| d.getDay() == 1) {
+				d.setDate(d.getDate() + 1);
+			}
+		}
 		SimpleDateFormat date = new SimpleDateFormat("EEEE d.M");
-		
+
 		// Try to contact API
-		String response = date.format(d)+"\n";
+		String response = date.format(d) + "\n";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/sv/"+tomorrow+"/");
+			URL uri = new URL("http://api.teknolog.fi/taffa/sv/" + tomorrow
+					+ "/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
 			InputStream is = connection.getInputStream();
