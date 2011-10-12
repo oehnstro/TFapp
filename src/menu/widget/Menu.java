@@ -5,7 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
-
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -19,33 +20,39 @@ public class Menu extends Service {
 	public void onStart(Intent intent, int startId) {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
+
 		
-		String response = "";
+		//Check time. If after 16:00 show tomorrow's menu.
+		int tomorrow = 0;
+		Date d = new Date();
+		if (d.getHours() >= 16)
+			tomorrow = 1;
+		SimpleDateFormat date = new SimpleDateFormat("EEEE d.M");
+		
+		// Try to contact API
+		String response = date.format(d)+"\n";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/sv/today/");
+			URL uri = new URL("http://api.teknolog.fi/taffa/sv/"+tomorrow+"/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
 			InputStream is = connection.getInputStream();
-			
+
 			BufferedReader buffer = new BufferedReader(
 					new InputStreamReader(is));
 			String s = "";
 			while ((s = buffer.readLine()) != null) {
-				response += s+"\n";
+				response += s + "\n";
 			}
-			is.close();	
-			
+			is.close();
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response = "Kunde inte uppdatera.";
+			response = "Unable to update. Touch to try again.";
 		}
-		
-		
-		
+
 		updateViews.setTextViewText(R.id.textMenu, response);
-				
-		// Push update for this widget to the home screen
+
+		// Update widget
 		ComponentName thisWidget = new ComponentName(this, FoodWidget.class);
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		manager.updateAppWidget(thisWidget, updateViews);
