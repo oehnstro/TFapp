@@ -1,8 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Täffä Menü</string>
-    <string name="widget_text">Uppdaterar...</string>
-    <string name="app_description">En widget som visar dagsens meny.</string>
+    <string name="app_name">TFapp Food Widget</string>
+    <string name="widget_text">Loading...</string>
+    <string name="app_description">Widget for displaying the menu at Teknologforeningen.</string>
     <string name="widget_header">Täffä Menü</string>
-    <string name="widget_update">Uppdatera</string>
+    <string name="widget_update">Update</string>
+    <string name="widget_conf_chooselang">Choose language</string>
+    <string name="default_lang">en</string>
+    
+    <string-array name="languages">
+    	<item>English</item>
+        <item>Svenska</item>
+        <item>Suomi</item>
+    </string-array>
+        <string name="save">Save</string>
 </resources>

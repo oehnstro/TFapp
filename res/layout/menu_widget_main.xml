@@ -10,6 +10,7 @@
 		android:text="@string/widget_header" android:textColor="@color/teknologrod"
 		android:textStyle="bold" android:clickable="true"
 		android:layout_marginLeft="15dip" android:layout_marginTop="10dip"></TextView>
+	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dip" android:textColor="@color/black" android:textSize="12dip" android:textStyle="bold" android:id="@+id/date" android:text="@string/widget_text"></TextView>
 
 
 	<TextView

@@ -9,26 +9,50 @@ import android.widget.RemoteViews;
 
 public class FoodWidget extends AppWidgetProvider {
 	
+	public static String updateAction = "updateAction";
+
 	// Called at certain intervals
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
 			int[] appWidgetIds) {
 
-		//Add listener to menu text
+		// Add listener to menu text
 		final int N = appWidgetIds.length;
 		for (int i = 0; i < N; i++) {
-		      int appWidgetId = appWidgetIds[i];
-		      
-		      Intent intent = new Intent(context, Menu.class);
-		      PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
-		      RemoteViews views = new RemoteViews(context.getPackageName(), R.layout.menu_widget_main);
-		      views.setOnClickPendingIntent(R.id.textMenu, pendingIntent);
+			int appWidgetId = appWidgetIds[i];
 
-		      appWidgetManager.updateAppWidget(appWidgetId, views);
-		    }
+			Intent intent = new Intent(context, Menu.class);
+			intent.setAction(updateAction);
+			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+					intent, 0);
+			RemoteViews views = new RemoteViews(context.getPackageName(),
+					R.layout.menu_widget_main);
+			views.setOnClickPendingIntent(R.id.textMenu, pendingIntent);
 
-		//Update text
+			appWidgetManager.updateAppWidget(appWidgetId, views);
+		}
+
+		// Update text
 		Intent intent = new Intent(context, Menu.class);
+		context.startService(intent);
+
+	}
+	
+	@Override
+	public void onReceive(Context context, Intent intent) {
+	 super.onReceive(context, intent);
+	 
+	 if (intent.getAction().equals(updateAction)){
+		 update(context);
+	 }
+	}
+
+	
+	//Update widget
+	public static void update(Context context) {
+
+		Intent intent = new Intent(context, Menu.class);
+
 		context.startService(intent);
 
 	}

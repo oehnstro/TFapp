@@ -20,5 +20,11 @@
 
 		</service>
 
+		<activity android:name=".WidgetConf" android:label="Menu Widget Config">
+			<intent-filter>
+				<action android:name="android.appwidget.action.APPWIDGET_CONFIGURE" />
+			</intent-filter>
+		</activity>
+
 	</application>
 </manifest>
