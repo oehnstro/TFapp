@@ -42,6 +42,12 @@ public class FoodWidget extends AppWidgetProvider {
 	public void onReceive(Context context, Intent intent) {
 	 super.onReceive(context, intent);
 	 
+	 RemoteViews updateViews = new RemoteViews("menu.widget",
+				R.layout.menu_widget_main);
+
+		// Set temp text
+		updateViews.setTextViewText(R.id.textMenu, "...Loading...");
+		
 	 if (intent.getAction().equals(updateAction)){
 		 update(context);
 	 }

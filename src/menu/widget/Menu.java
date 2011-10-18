@@ -21,11 +21,11 @@ public class Menu extends Service {
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
 	private static final String[][] weekdays = {
-			{ "Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag",
+			{ "", "Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag",
 					"Lördag" },
-			{ "Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai",
+			{ "", "Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai",
 					"Perjantai", "Lauantai" },
-			{ "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
+			{ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
 					"Saturday" } };
 
 	@Override
