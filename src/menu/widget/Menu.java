@@ -30,7 +30,6 @@ public class Menu extends Service {
 
 	@Override
 	public void onStart(Intent intent, int startId) {
-System.out.println("asdfasfdas");
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
 
@@ -47,7 +46,10 @@ System.out.println("asdfasfdas");
 			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
 		} else if (now.get(Calendar.HOUR_OF_DAY) >= 16) {
 			tomorrow = 1;
-			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
+			if (now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
+				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 3);
+			else
+				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
 		}
 
 		SimpleDateFormat date = new SimpleDateFormat("d.M");
