@@ -24,7 +24,7 @@ public class LunchWidget extends AppWidgetProvider {
 		for (int i = 0; i < N; i++) {
 			int appWidgetId = appWidgetIds[i];
 
-			Intent intent = new Intent(context, MenuUpdateService.class);
+			Intent intent = new Intent(context, LunchUpdateService.class);
 			intent.setAction(updateAction);
 			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
 					intent, 0);
@@ -36,7 +36,7 @@ public class LunchWidget extends AppWidgetProvider {
 		}
 
 		// Update text
-		Intent intent = new Intent(context, MenuUpdateService.class);
+		Intent intent = new Intent(context, LunchUpdateService.class);
 		context.startService(intent);
 
 	}
@@ -60,7 +60,7 @@ public class LunchWidget extends AppWidgetProvider {
 	//Update widget
 	public static void update(Context context) {
 
-		Intent intent = new Intent(context, MenuUpdateService.class);
+		Intent intent = new Intent(context, LunchUpdateService.class);
 
 		context.startService(intent);
 

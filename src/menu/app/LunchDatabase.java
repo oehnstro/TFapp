@@ -8,6 +8,14 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
+/**
+ * Class for interactig with the SQLite database on the device
+ * This class stores the lunches that the service retrieves in 
+ * the device so there is no need to update as often.
+ * 
+ * @author Oskar Ehnstrom
+ *
+ */
 public class LunchDatabase extends SQLiteOpenHelper {
 
 	private static final int VERSION = 1;

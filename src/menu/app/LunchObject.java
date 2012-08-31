@@ -2,6 +2,13 @@ package menu.app;
 
 import java.sql.Date;
 
+/**
+ * This class represents a lunch at the restaurant.
+ * 
+ * @author Oskar Ehnstrom
+ *
+ */
+
 public class LunchObject {
 
 	private Date date; // SQL type date
@@ -55,5 +62,10 @@ public class LunchObject {
 
 	public String getDate() {
 		return this.date.toString();
+	}
+	
+	public String getDateShort(){
+		// TODO: Fix deprecated methods.
+		return  this.date.getDate() + "." + this.date.getMonth();
 	}
 }

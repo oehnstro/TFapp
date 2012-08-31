@@ -20,7 +20,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-public class MenuUpdateService extends Service {
+public class LunchUpdateService extends Service {
 
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
