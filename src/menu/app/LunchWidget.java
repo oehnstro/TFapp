@@ -1,5 +1,8 @@
-package menu.widget;
+package menu.app;
 
+import menu.widget.R;
+import menu.widget.R.id;
+import menu.widget.R.layout;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -7,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.widget.RemoteViews;
 
-public class FoodWidget extends AppWidgetProvider {
+public class LunchWidget extends AppWidgetProvider {
 	
 	public static String updateAction = "updateAction";
 
@@ -21,7 +24,7 @@ public class FoodWidget extends AppWidgetProvider {
 		for (int i = 0; i < N; i++) {
 			int appWidgetId = appWidgetIds[i];
 
-			Intent intent = new Intent(context, Menu.class);
+			Intent intent = new Intent(context, MenuUpdateService.class);
 			intent.setAction(updateAction);
 			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
 					intent, 0);
@@ -33,7 +36,7 @@ public class FoodWidget extends AppWidgetProvider {
 		}
 
 		// Update text
-		Intent intent = new Intent(context, Menu.class);
+		Intent intent = new Intent(context, MenuUpdateService.class);
 		context.startService(intent);
 
 	}
@@ -57,7 +60,7 @@ public class FoodWidget extends AppWidgetProvider {
 	//Update widget
 	public static void update(Context context) {
 
-		Intent intent = new Intent(context, Menu.class);
+		Intent intent = new Intent(context, MenuUpdateService.class);
 
 		context.startService(intent);
 

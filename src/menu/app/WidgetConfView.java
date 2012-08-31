@@ -1,4 +1,4 @@
-package menu.widget;
+package menu.app;
 
 import android.app.Activity;
 import android.appwidget.AppWidgetManager;
@@ -12,8 +12,10 @@ import android.widget.Spinner;
 // Need the following import to get access to the app resources, since this
 // class is in a sub-package.
 import menu.widget.R;
+import menu.widget.R.id;
+import menu.widget.R.layout;
 
-public class WidgetConf extends Activity {
+public class WidgetConfView extends Activity {
 
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
@@ -21,7 +23,7 @@ public class WidgetConf extends Activity {
 
 	int mAppWidgetId = AppWidgetManager.INVALID_APPWIDGET_ID;
 
-	public WidgetConf() {
+	public WidgetConfView() {
 		super();
 	}
 
@@ -53,14 +55,14 @@ public class WidgetConf extends Activity {
 	//Click listener
 	View.OnClickListener mOnClickListener = new View.OnClickListener() {
 		public void onClick(View v) {
-			final Context context = WidgetConf.this;
+			final Context context = WidgetConfView.this;
 
 			//Get the language
 			String language = spinner.getSelectedItem().toString();
 			saveLanguage(context, language);
 
 			//Update widget
-			FoodWidget.update(context);
+			LunchWidget.update(context);
 
 			// Make sure we pass back the original appWidgetId
 			Intent resultValue = new Intent();

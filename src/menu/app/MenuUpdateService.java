@@ -1,4 +1,4 @@
-package menu.widget;
+package menu.app;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -8,6 +8,10 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import menu.widget.R;
+import menu.widget.R.id;
+import menu.widget.R.layout;
+
 import android.app.Service;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
@@ -16,7 +20,7 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-public class Menu extends Service {
+public class MenuUpdateService extends Service {
 
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
@@ -99,7 +103,7 @@ public class Menu extends Service {
 		updateViews.setTextViewText(R.id.textMenu, response);
 
 		// Update widget
-		ComponentName thisWidget = new ComponentName(this, FoodWidget.class);
+		ComponentName thisWidget = new ComponentName(this, LunchWidget.class);
 		AppWidgetManager manager = AppWidgetManager.getInstance(this);
 		manager.updateAppWidget(thisWidget, updateViews);
 	}

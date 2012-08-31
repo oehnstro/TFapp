@@ -14,4 +14,8 @@
         <item>Suomi</item>
     </string-array>
         <string name="save">Save</string>
+        <string name="dayanddate">Day and date</string>
+        <string name="menuhere">menu goes here</string>
+        <string name="about">about this app</string>
+        <string name="about_title">About</string>
 </resources>
