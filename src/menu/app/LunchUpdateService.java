@@ -8,6 +8,10 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import menu.widget.R;
 import menu.widget.R.id;
 import menu.widget.R.layout;
@@ -24,37 +28,11 @@ public class LunchUpdateService extends Service {
 
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
-	private static final String[][] weekdays = {
-			{ "", "Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag",
-					"Lördag" },
-			{ "", "Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai",
-					"Perjantai", "Lauantai" },
-			{ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-					"Saturday" } };
-
 	@Override
 	public void onStart(Intent intent, int startId) {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
 
-		// Set temp text
-		updateViews.setTextViewText(R.id.textMenu, "Loading");
-
-		// Check time. If after 16:00 show tomorrow's menu.
-		// If saturday or sunday, show monday's menu
-		int tomorrow = 0;
-		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 2);
-		} else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
-		} else if (now.get(Calendar.HOUR_OF_DAY) >= 16) {
-			tomorrow = 1;
-			if (now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
-				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 3);
-			else
-				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
-		}
 
 		SimpleDateFormat date = new SimpleDateFormat("d.M");
 
@@ -73,16 +51,13 @@ public class LunchUpdateService extends Service {
 		}
 		
 		//Set date
-		String dateString = weekdays[langInt][now.get(Calendar.DAY_OF_WEEK)]
-				+ " " + date.format(now.getTime());
-		updateViews.setTextViewText(R.id.date, dateString);
+		String dateString;
 
 
 		// Try to contact API
 		String response = "";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "/"
-					+ tomorrow + "/");
+			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "json/week/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
 			InputStream is = connection.getInputStream();
@@ -97,10 +72,34 @@ public class LunchUpdateService extends Service {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response = "Unable to update. Touch to try again.";
+			return;
+		}
+		
+		JSONArray week;
+		try {
+			week = new JSONArray(response);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
 		}
 
-		updateViews.setTextViewText(R.id.textMenu, response);
+
+		for (int i = 0; i < week.length(); i++){
+			JSONObject json;
+			try {
+				json = week.getJSONObject(i);
+			
+			
+			
+			
+			
+			
+			} catch (JSONException e) {
+				e.printStackTrace();
+			}
+			
+			
+		}
 
 		// Update widget
 		ComponentName thisWidget = new ComponentName(this, LunchWidget.class);
