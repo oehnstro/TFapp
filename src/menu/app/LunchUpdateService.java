@@ -8,6 +8,10 @@ import java.net.URLConnection;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import menu.widget.R;
 import menu.widget.R.id;
 import menu.widget.R.layout;
@@ -32,6 +36,8 @@ public class LunchUpdateService extends Service {
 			{ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
 					"Saturday" } };
 
+	private LunchDatabase db;
+
 	@Override
 	public void onStart(Intent intent, int startId) {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
@@ -40,6 +46,8 @@ public class LunchUpdateService extends Service {
 		// Set temp text
 		updateViews.setTextViewText(R.id.textMenu, "Loading");
 
+		db = new LunchDatabase(getBaseContext());
+		
 		// Check time. If after 16:00 show tomorrow's menu.
 		// If saturday or sunday, show monday's menu
 		int tomorrow = 0;
@@ -81,7 +89,7 @@ public class LunchUpdateService extends Service {
 		// Try to contact API
 		String response = "";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "/"
+			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "/json/week/"
 					+ tomorrow + "/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
@@ -100,7 +108,30 @@ public class LunchUpdateService extends Service {
 			response = "Unable to update. Touch to try again.";
 		}
 
-		updateViews.setTextViewText(R.id.textMenu, response);
+		JSONArray lunches = new JSONArray();
+		try {
+			lunches = new JSONArray(response);
+		} catch (JSONException e){
+			e.printStackTrace();
+		}
+
+		for (int i = 0; i < lunches.length(); i++){
+			
+			try {
+			JSONObject o = lunches.getJSONObject(i);
+			
+			
+				o.getString("main");
+				
+				
+				LunchObject lunch = new LunchObject(null);
+				db.addLunch(lunch);
+				
+			} catch (JSONException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}	
+		}
 
 		// Update widget
 		ComponentName thisWidget = new ComponentName(this, LunchWidget.class);
