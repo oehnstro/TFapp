@@ -38,10 +38,12 @@ public class LunchUpdateService extends Service {
 
 	private LunchDatabase db;
 
+
 	@Override
 	public void onStart(Intent intent, int startId) {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
+
 
 		// Set temp text
 		updateViews.setTextViewText(R.id.textMenu, "Loading");
@@ -81,16 +83,13 @@ public class LunchUpdateService extends Service {
 		}
 		
 		//Set date
-		String dateString = weekdays[langInt][now.get(Calendar.DAY_OF_WEEK)]
-				+ " " + date.format(now.getTime());
-		updateViews.setTextViewText(R.id.date, dateString);
+		String dateString;
 
 
 		// Try to contact API
 		String response = "";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "/json/week/"
-					+ tomorrow + "/");
+			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "json/week/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
 			InputStream is = connection.getInputStream();
@@ -105,7 +104,15 @@ public class LunchUpdateService extends Service {
 
 		} catch (Exception e) {
 			e.printStackTrace();
-			response = "Unable to update. Touch to try again.";
+			return;
+		}
+		
+		JSONArray week;
+		try {
+			week = new JSONArray(response);
+		} catch (JSONException e) {
+			e.printStackTrace();
+			return;
 		}
 
 		JSONArray lunches = new JSONArray();
