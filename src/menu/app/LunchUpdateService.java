@@ -5,6 +5,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.Date;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
@@ -16,7 +18,7 @@ import menu.widget.R;
 import menu.widget.R.id;
 import menu.widget.R.layout;
 
-import android.app.Service;
+import android.app.IntentService;
 import android.appwidget.AppWidgetManager;
 import android.content.ComponentName;
 import android.content.Intent;
@@ -24,32 +26,56 @@ import android.content.SharedPreferences;
 import android.os.IBinder;
 import android.widget.RemoteViews;
 
-public class LunchUpdateService extends Service {
+public class LunchUpdateService extends IntentService {
 
 	private static final String PREFS_NAME = "menu.widget.WidgetConf";
 
 	private static final String[][] weekdays = {
 			{ "", "Söndag", "Måndag", "Tisdag", "Onsdag", "Torsdag", "Fredag",
 					"Lördag" },
-			{ "", "Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko", "Torstai",
-					"Perjantai", "Lauantai" },
-			{ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday",
-					"Saturday" } };
+			{ "", "Sunnuntai", "Maanantai", "Tiistai", "Keskiviikko",
+					"Torstai", "Perjantai", "Lauantai" },
+			{ "", "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday",
+					"Friday", "Saturday" } };
 
 	private LunchDatabase db;
 
+	public LunchUpdateService() {
+		super("LunchUpdater");
+	}
 
 	@Override
-	public void onStart(Intent intent, int startId) {
+	protected void onHandleIntent(Intent intent) {
+		this.getNewMenu();
+		this.updateWidget();
+	}
+
+	private void updateWidget() {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
 				R.layout.menu_widget_main);
-
 
 		// Set temp text
 		updateViews.setTextViewText(R.id.textMenu, "Loading");
 
+		if (db == null) {
+			db = new LunchDatabase(getBaseContext());
+		}
+
+		LunchObject lunch = db.getLunch(new java.util.Date());
+		if (lunch != null) {
+			String menuText = lunch.getMenuAsString();
+			updateViews.setTextViewText(R.id.textMenu, menuText);
+		}
+
+		ComponentName thisWidget = new ComponentName(this, LunchWidget.class);
+		AppWidgetManager manager = AppWidgetManager.getInstance(this);
+		manager.updateAppWidget(thisWidget, updateViews);
+	}
+
+	private void getNewMenu() {
+
 		db = new LunchDatabase(getBaseContext());
-		
+
 		// Check time. If after 16:00 show tomorrow's menu.
 		// If saturday or sunday, show monday's menu
 		int tomorrow = 0;
@@ -81,15 +107,15 @@ public class LunchUpdateService extends Service {
 			langId = "sv";
 			langInt = 0;
 		}
-		
-		//Set date
-		String dateString;
 
+		// Set date
+		String dateString;
 
 		// Try to contact API
 		String response = "";
 		try {
-			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId + "json/week/");
+			URL uri = new URL("http://api.teknolog.fi/taffa/" + langId
+					+ "/json/week/");
 			URLConnection connection = uri.openConnection();
 			connection.connect();
 			InputStream is = connection.getInputStream();
@@ -106,49 +132,39 @@ public class LunchUpdateService extends Service {
 			e.printStackTrace();
 			return;
 		}
-		
-		JSONArray week;
+
+		// Parse the JSON
 		try {
-			week = new JSONArray(response);
+			JSONArray lunches = new JSONArray(response);
+
+			for (int i = 0; i < lunches.length(); i++) {
+
+				JSONObject o = lunches.getJSONObject(i);
+
+				// Parse the date
+				SimpleDateFormat sdf = new SimpleDateFormat("dd.MM.yyyy");
+				Date d = sdf.parse(o.getString("date"));
+
+				LunchObject lunch = new LunchObject(d);
+				lunch.setMain(o.getString("main"));
+				lunch.setVege(o.getString("vegetarian"));
+				lunch.setSoup(o.getString("soup"));
+				lunch.setSalad(o.getString("salad"));
+				lunch.setAlacarte(o.getString("alacarte"));
+				
+				if (o.has("extra"))
+					lunch.setExtra(o.getString("extra"));
+
+				db.addLunch(lunch);
+
+			}
+
 		} catch (JSONException e) {
 			e.printStackTrace();
-			return;
-		}
-
-		JSONArray lunches = new JSONArray();
-		try {
-			lunches = new JSONArray(response);
-		} catch (JSONException e){
+		} catch (ParseException e) {
 			e.printStackTrace();
 		}
 
-		for (int i = 0; i < lunches.length(); i++){
-			
-			try {
-			JSONObject o = lunches.getJSONObject(i);
-			
-			
-				o.getString("main");
-				
-				
-				LunchObject lunch = new LunchObject(null);
-				db.addLunch(lunch);
-				
-			} catch (JSONException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}	
-		}
-
-		// Update widget
-		ComponentName thisWidget = new ComponentName(this, LunchWidget.class);
-		AppWidgetManager manager = AppWidgetManager.getInstance(this);
-		manager.updateAppWidget(thisWidget, updateViews);
+		db.close();
 	}
-
-	@Override
-	public IBinder onBind(Intent arg0) {
-		return null;
-	}
-
 }

@@ -18,4 +18,5 @@
         <string name="menuhere">menu goes here</string>
         <string name="about">about this app</string>
         <string name="about_title">About</string>
+        <string name="app_update">Update</string>
 </resources>

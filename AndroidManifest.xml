@@ -27,7 +27,7 @@
                 android:resource="@xml/menu_widget" />
         </receiver>
 
-        <service android:name="menu.app.LunchUpdateService" >
+        <service android:name="menu.app.LunchUpdateService" android:process=":update_process">
         </service>
 
         <activity

@@ -18,12 +18,17 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class LunchDatabase extends SQLiteOpenHelper {
 
-	private static final int VERSION = 1;
+	private static final int VERSION = 2;
 	private static final String DB_NAME = "Lunches_db";
-	private static final String TABLE_NAME = "Lunch_table";
+	private static final String TABLE_NAME = "Lunch_Table";
 	private static final String KEY_ID = "id";
 	private static final String KEY_DATE = "date";
 	private static final String KEY_MAIN = "maincourse";
+	private static final String KEY_VEGE = "vege";
+	private static final String KEY_SALAD = "salad";
+	private static final String KEY_SOUP = "soup";
+	private static final String KEY_ALACARTE = "alacarte";
+	private static final String KEY_EXTRA = "extra";
 
 	public LunchDatabase(Context context) {
 		super(context, DB_NAME, null, VERSION);
@@ -32,8 +37,14 @@ public class LunchDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_SQL = "CREATE TABLE " + TABLE_NAME + "(" + KEY_ID
-				+ " INTEGER PRIMARY KEY," + KEY_DATE + " DATE," + KEY_MAIN
-				+ " TEXT" + ")";
+				+ " INTEGER PRIMARY KEY," + KEY_DATE + " DATE," 
+				+ KEY_MAIN + " TEXT," 
+				+ KEY_VEGE + " TEXT," 
+				+ KEY_SALAD + " TEXT," 
+				+ KEY_SOUP + " TEXT," 
+				+ KEY_ALACARTE + " TEXT," 
+				+ KEY_EXTRA + " TEXT" 
+				+ ")";
 		db.execSQL(CREATE_SQL);
 	}
 
@@ -55,10 +66,16 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getWritableDatabase();
 
 		ContentValues values = new ContentValues();
-		values.put(KEY_DATE, lunch.getDate());
+		values.put(KEY_DATE, lunch.getDateInSQL());
 		values.put(KEY_MAIN, lunch.getMain());
+		values.put(KEY_VEGE, lunch.getVege());
+		values.put(KEY_SOUP, lunch.getSoup());
+		values.put(KEY_SALAD, lunch.getSalad());
+		values.put(KEY_ALACARTE, lunch.getAlacarte());
+		values.put(KEY_EXTRA, lunch.getExtra());
 
 		db.insert(TABLE_NAME, null, values);
+
 		db.close();
 	}
 
@@ -66,19 +83,22 @@ public class LunchDatabase extends SQLiteOpenHelper {
 	 * Return the lunch object for the specified date If there is no lunch for
 	 * that date return null.
 	 * 
-	 * @param date
+	 * @param date java.util.Date
 	 * @return LunchObject or null if none found.
 	 */
-	public LunchObject getLunch(Date date) {
+	public LunchObject getLunch(java.util.Date date0) {
+		Date date = new Date(date0.getTime());
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID, KEY_DATE,
-				KEY_MAIN }, KEY_DATE + "=?", new String[] { date.toString() },
+				KEY_MAIN, KEY_VEGE, KEY_SALAD, KEY_SOUP, KEY_ALACARTE, KEY_EXTRA }, KEY_DATE + "=?", new String[] { date.toString() },
 				null, null, null, null);
 
 		// If no results
-		if (cursor.getCount() < 1)
+		if (cursor.getCount() < 1){
+			System.out.println("No lunch for: " + date.toString());
 			return null;
+		}
 
 		// Mode to first (and only) result
 		if (cursor != null)
@@ -93,9 +113,13 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		}
 		
 		// TODO: Fix only main shown
-		LunchObject lunch = new LunchObject(d, cursor.getString(2),
-				cursor.getString(2), cursor.getString(2), cursor.getString(2),
-				cursor.getString(2));
+		LunchObject lunch = new LunchObject(d);
+		lunch.setMain(cursor.getString(2));
+		lunch.setVege(cursor.getString(3));
+		lunch.setSalad(cursor.getString(4));
+		lunch.setSoup(cursor.getString(5));
+		lunch.setAlacarte(cursor.getString(6));
+		lunch.setExtra(cursor.getString(7));
 
 		return lunch;
 	}

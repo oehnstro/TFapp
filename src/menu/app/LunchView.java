@@ -1,6 +1,6 @@
 package menu.app;
 
-import java.sql.Date;
+import java.util.Date;
 
 import menu.widget.R;
 import android.app.Activity;
@@ -11,33 +11,50 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 public class LunchView extends Activity {
-	
+
 	private LunchDatabase lunches;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
-	    super.onCreate(savedInstanceState);
-	    setContentView(R.layout.app_lunch);
-	    
-	    lunches = new LunchDatabase(getBaseContext());
-	    
-	    TextView menu = (TextView) findViewById(R.id.lunchmenu);
-	    LunchObject lunch = lunches.getLunch(new Date(0));
-	    if (lunch != null)
-	    	menu.setText(lunch.getMain());
+		super.onCreate(savedInstanceState);
+		setContentView(R.layout.app_lunch);
+		
+		Intent intent = new Intent(getBaseContext(), LunchUpdateService.class);
+		getApplication().startService(intent);
+
+		lunches = new LunchDatabase(getBaseContext());
+
+		updateMenu();
+	}
+
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		getMenuInflater().inflate(R.menu.menu, menu);
+		return true;
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case R.id.menu_update:
+			updateMenu();
+			return true;
+		case R.id.menu_about:
+			Intent j = new Intent(LunchView.this, AboutView.class);
+			startActivity(j);
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
 	}
 	
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-    	getMenuInflater().inflate(R.menu.menu, menu);
-		return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-    	Intent i = new Intent(LunchView.this, AboutView.class);
-    	startActivity(i);
-    	
-		return true;
-    }
+	private void updateMenu(){
+		TextView menu = (TextView) findViewById(R.id.lunchmenu);
+		LunchObject lunch = lunches.getLunch(new Date());
+		if (lunch != null){
+			menu.setText(lunch.getMenuAsString());
+		} else {
+			menu.setText("No lunch");
+		}
+	}
 }
