@@ -123,6 +123,8 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		lunch.setExtra(cursor.getString(7));
 		lunch.setWeekday(cursor.getString(8));
 
+		db.close();
+		
 		return lunch;
 	}
 }
