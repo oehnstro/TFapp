@@ -9,16 +9,17 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 /**
- * Class for interactig with the SQLite database on the device
- * This class stores the lunches that the service retrieves in 
- * the device so there is no need to update as often.
+ * Class for interactig with the SQLite database on the device This class stores
+ * the lunches that the service retrieves in the device so that the need to
+ * update is reduced and the app can cope without a connection for as long as it
+ * has lunches stored.
  * 
  * @author Oskar Ehnstrom
- *
+ * 
  */
 public class LunchDatabase extends SQLiteOpenHelper {
 
-	private static final int VERSION = 2;
+	private static final int VERSION = 5;
 	private static final String DB_NAME = "Lunches_db";
 	private static final String TABLE_NAME = "Lunch_Table";
 	private static final String KEY_ID = "id";
@@ -29,6 +30,7 @@ public class LunchDatabase extends SQLiteOpenHelper {
 	private static final String KEY_SOUP = "soup";
 	private static final String KEY_ALACARTE = "alacarte";
 	private static final String KEY_EXTRA = "extra";
+	private static final String KEY_WEEKDAY = "weekday";
 
 	public LunchDatabase(Context context) {
 		super(context, DB_NAME, null, VERSION);
@@ -37,20 +39,16 @@ public class LunchDatabase extends SQLiteOpenHelper {
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		String CREATE_SQL = "CREATE TABLE " + TABLE_NAME + "(" + KEY_ID
-				+ " INTEGER PRIMARY KEY," + KEY_DATE + " DATE," 
-				+ KEY_MAIN + " TEXT," 
-				+ KEY_VEGE + " TEXT," 
-				+ KEY_SALAD + " TEXT," 
-				+ KEY_SOUP + " TEXT," 
-				+ KEY_ALACARTE + " TEXT," 
-				+ KEY_EXTRA + " TEXT" 
-				+ ")";
+				+ " INTEGER PRIMARY KEY," + KEY_DATE + " DATE," + KEY_MAIN
+				+ " TEXT," + KEY_VEGE + " TEXT," + KEY_SALAD + " TEXT,"
+				+ KEY_SOUP + " TEXT," + KEY_ALACARTE + " TEXT," + KEY_EXTRA
+				+ " TEXT," + KEY_WEEKDAY + " TEXT )";
 		db.execSQL(CREATE_SQL);
 	}
 
 	/**
-	 * On upgrade of the database the old database is dropped
-	 * and a new one is created. Might fix some day.
+	 * On upgrade of the database the old database is dropped and a new one is
+	 * created. Might fix some day.
 	 */
 	@Override
 	public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -60,6 +58,7 @@ public class LunchDatabase extends SQLiteOpenHelper {
 
 	/**
 	 * Add a lunch to the database
+	 * 
 	 * @param lunch
 	 */
 	public void addLunch(LunchObject lunch) {
@@ -73,8 +72,9 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		values.put(KEY_SALAD, lunch.getSalad());
 		values.put(KEY_ALACARTE, lunch.getAlacarte());
 		values.put(KEY_EXTRA, lunch.getExtra());
+		values.put(KEY_WEEKDAY, lunch.getWeekday());
 
-		db.insert(TABLE_NAME, null, values);
+		db.replace(TABLE_NAME, null, values);
 
 		db.close();
 	}
@@ -83,7 +83,8 @@ public class LunchDatabase extends SQLiteOpenHelper {
 	 * Return the lunch object for the specified date If there is no lunch for
 	 * that date return null.
 	 * 
-	 * @param date java.util.Date
+	 * @param date
+	 *            java.util.Date
 	 * @return LunchObject or null if none found.
 	 */
 	public LunchObject getLunch(java.util.Date date0) {
@@ -91,19 +92,19 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		SQLiteDatabase db = this.getReadableDatabase();
 
 		Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID, KEY_DATE,
-				KEY_MAIN, KEY_VEGE, KEY_SALAD, KEY_SOUP, KEY_ALACARTE, KEY_EXTRA }, KEY_DATE + "=?", new String[] { date.toString() },
+				KEY_MAIN, KEY_VEGE, KEY_SALAD, KEY_SOUP, KEY_ALACARTE,
+				KEY_EXTRA, KEY_WEEKDAY }, KEY_DATE + "=?", new String[] { date.toString() },
 				null, null, null, null);
 
 		// If no results
-		if (cursor.getCount() < 1){
-			System.out.println("No lunch for: " + date.toString());
+		if (cursor.getCount() < 1) {
 			return null;
 		}
 
 		// Mode to first (and only) result
 		if (cursor != null)
 			cursor.moveToFirst();
-		
+
 		// Check the date format
 		Date d;
 		try {
@@ -111,7 +112,7 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		} catch (IllegalArgumentException e) {
 			return null;
 		}
-		
+
 		// TODO: Fix only main shown
 		LunchObject lunch = new LunchObject(d);
 		lunch.setMain(cursor.getString(2));
@@ -120,6 +121,7 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		lunch.setSoup(cursor.getString(5));
 		lunch.setAlacarte(cursor.getString(6));
 		lunch.setExtra(cursor.getString(7));
+		lunch.setWeekday(cursor.getString(8));
 
 		return lunch;
 	}

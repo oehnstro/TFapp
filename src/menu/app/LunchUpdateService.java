@@ -151,7 +151,8 @@ public class LunchUpdateService extends IntentService {
 				lunch.setSoup(o.getString("soup"));
 				lunch.setSalad(o.getString("salad"));
 				lunch.setAlacarte(o.getString("alacarte"));
-				
+				lunch.setWeekday(o.getString("dayname"));
+								
 				if (o.has("extra"))
 					lunch.setExtra(o.getString("extra"));
 

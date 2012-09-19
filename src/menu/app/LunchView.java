@@ -50,9 +50,11 @@ public class LunchView extends Activity {
 	
 	private void updateMenu(){
 		TextView menu = (TextView) findViewById(R.id.lunchmenu);
+		TextView header = (TextView) findViewById(R.id.lunch_header);
 		LunchObject lunch = lunches.getLunch(new Date());
 		if (lunch != null){
 			menu.setText(lunch.getMenuAsString());
+			header.setText(lunch.getWeekday() + " " + lunch.getDateShort());
 		} else {
 			menu.setText("No lunch");
 		}

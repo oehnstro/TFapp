@@ -20,6 +20,7 @@ public class LunchObject {
 	private String salad;
 	private String alacarte;
 	private String extra;
+	private String weekday;
 
 	/**
 	 *  Create the lunch for the given date.
@@ -34,6 +35,7 @@ public class LunchObject {
 		this.salad = "";
 		this.alacarte = "";
 		this.extra = "";
+		this.weekday = "";
 	}
 
 	/**
@@ -124,6 +126,21 @@ public class LunchObject {
 	 */
 	public void setExtra(String extra) {
 		this.extra = extra;
+	}
+	
+	/**
+	 * Return the weekday this lunch is served.
+	 * @return String name of weekday
+	 */
+	public String getWeekday(){
+		return this.weekday;
+	}
+	
+	/**
+	 * Set the weekday
+	 */
+	public void setWeekday(String weekday){
+		this.weekday = weekday;
 	}
 
 	/**
