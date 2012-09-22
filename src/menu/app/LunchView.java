@@ -1,5 +1,6 @@
 package menu.app;
 
+import java.util.Calendar;
 import java.util.Date;
 
 import menu.widget.R;
@@ -51,12 +52,25 @@ public class LunchView extends Activity {
 	private void updateMenu(){
 		TextView menu = (TextView) findViewById(R.id.lunchmenu);
 		TextView header = (TextView) findViewById(R.id.lunch_header);
-		LunchObject lunch = lunches.getLunch(new Date());
+		LunchObject lunch = lunches.getLunch(this.getNextMealDate());
 		if (lunch != null){
 			menu.setText(lunch.getMenuAsString());
 			header.setText(lunch.getWeekday() + " " + lunch.getDateShort());
 		} else {
-			menu.setText("No lunch");
+			Intent i = new Intent("menu.app.LunchUpdateService");
+			startService(i);
+			menu.setText("Updating, test.");
 		}
+	}
+	
+	private Date getNextMealDate(){
+		Calendar today = Calendar.getInstance();
+		if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
+			today.add(Calendar.DATE, 2);
+		} else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
+			today.add(Calendar.DATE, 1);	
+		}
+		System.out.println(today.getTime());
+		return today.getTime();
 	}
 }

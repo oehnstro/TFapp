@@ -49,6 +49,14 @@ public class LunchUpdateService extends IntentService {
 		this.getNewMenu();
 		this.updateWidget();
 	}
+	private LunchDatabase getDB(){
+		if (db == null) {
+			db = new LunchDatabase(getBaseContext());
+			return db;
+		} else {
+			return db;
+		}
+	}
 
 	private void updateWidget() {
 		RemoteViews updateViews = new RemoteViews(this.getPackageName(),
@@ -57,11 +65,7 @@ public class LunchUpdateService extends IntentService {
 		// Set temp text
 		updateViews.setTextViewText(R.id.textMenu, "Loading");
 
-		if (db == null) {
-			db = new LunchDatabase(getBaseContext());
-		}
-
-		LunchObject lunch = db.getLunch(new java.util.Date());
+		LunchObject lunch = getDB().getLunch(new java.util.Date());
 		if (lunch != null) {
 			String menuText = lunch.getMenuAsString();
 			updateViews.setTextViewText(R.id.textMenu, menuText);
@@ -75,24 +79,6 @@ public class LunchUpdateService extends IntentService {
 	private void getNewMenu() {
 
 		db = new LunchDatabase(getBaseContext());
-
-		// Check time. If after 16:00 show tomorrow's menu.
-		// If saturday or sunday, show monday's menu
-		int tomorrow = 0;
-		Calendar now = Calendar.getInstance();
-		if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
-			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 2);
-		} else if (now.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
-			now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
-		} else if (now.get(Calendar.HOUR_OF_DAY) >= 16) {
-			tomorrow = 1;
-			if (now.get(Calendar.DAY_OF_WEEK) == Calendar.FRIDAY)
-				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 3);
-			else
-				now.set(Calendar.DAY_OF_YEAR, now.get(Calendar.DAY_OF_YEAR) + 1);
-		}
-
-		SimpleDateFormat date = new SimpleDateFormat("d.M");
 
 		// Get language from preferences
 		SharedPreferences prefs = getSharedPreferences(PREFS_NAME, 0);
@@ -108,8 +94,6 @@ public class LunchUpdateService extends IntentService {
 			langInt = 0;
 		}
 
-		// Set date
-		String dateString;
 
 		// Try to contact API
 		String response = "";

@@ -113,7 +113,6 @@ public class LunchDatabase extends SQLiteOpenHelper {
 			return null;
 		}
 
-		// TODO: Fix only main shown
 		LunchObject lunch = new LunchObject(d);
 		lunch.setMain(cursor.getString(2));
 		lunch.setVege(cursor.getString(3));

@@ -11,9 +11,7 @@ import android.content.Intent;
 import android.widget.RemoteViews;
 
 public class LunchWidget extends AppWidgetProvider {
-	
-	public static String updateAction = "updateAction";
-
+		
 	// Called at certain intervals
 	@Override
 	public void onUpdate(Context context, AppWidgetManager appWidgetManager,
@@ -24,9 +22,8 @@ public class LunchWidget extends AppWidgetProvider {
 		for (int i = 0; i < N; i++) {
 			int appWidgetId = appWidgetIds[i];
 
-			Intent intent = new Intent(context, LunchUpdateService.class);
-			intent.setAction(updateAction);
-			PendingIntent pendingIntent = PendingIntent.getService(context, 0,
+			Intent intent = new Intent(context, LunchView.class);
+			PendingIntent pendingIntent = PendingIntent.getActivity(context, 0,
 					intent, 0);
 			RemoteViews views = new RemoteViews(context.getPackageName(),
 					R.layout.menu_widget_main);
@@ -36,8 +33,8 @@ public class LunchWidget extends AppWidgetProvider {
 		}
 
 		// Update text
-		Intent intent = new Intent(context, LunchUpdateService.class);
-		context.startService(intent);
+		//Intent intent = new Intent(context, LunchUpdateService.class);
+		//context.startService(intent);
 
 	}
 	
@@ -45,24 +42,11 @@ public class LunchWidget extends AppWidgetProvider {
 	public void onReceive(Context context, Intent intent) {
 	 super.onReceive(context, intent);
 	 
-	 RemoteViews updateViews = new RemoteViews("menu.widget",
+	 RemoteViews updateViews = new RemoteViews("menu.app",
 				R.layout.menu_widget_main);
 
 		// Set temp text
 		updateViews.setTextViewText(R.id.textMenu, "...Loading...");
 		
-	 if (intent.getAction().equals(updateAction)){
-		 update(context);
-	 }
-	}
-
-	
-	//Update widget
-	public static void update(Context context) {
-
-		Intent intent = new Intent(context, LunchUpdateService.class);
-
-		context.startService(intent);
-
 	}
 }

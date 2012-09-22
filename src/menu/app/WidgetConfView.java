@@ -62,7 +62,7 @@ public class WidgetConfView extends Activity {
 			saveLanguage(context, language);
 
 			//Update widget
-			LunchWidget.update(context);
+			//LunchWidget.update(context);
 
 			// Make sure we pass back the original appWidgetId
 			Intent resultValue = new Intent();
