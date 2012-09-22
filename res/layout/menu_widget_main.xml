@@ -1,23 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-	android:layout_width="160dp" android:layout_height="200dp"
-	android:background="@drawable/bg2x2" android:gravity="left"
-	android:orientation="vertical">
+    android:layout_width="160dp"
+    android:layout_height="200dp"
+    android:alpha="50"
+    android:background="@color/bg_color"
+    android:gravity="left"
+    android:orientation="vertical" >
 
-	<TextView android:id="@+id/textHeader" android:textAppearance="?android:attr/textAppearanceMedium"
-		android:layout_height="wrap_content" android:layout_width="wrap_content"
-		android:layout_alignParentTop="true" android:layout_centerHorizontal="true"
-		android:text="@string/widget_header" android:textStyle="bold" android:clickable="true"
-		android:layout_marginLeft="15dip" android:layout_marginTop="10dip" android:textColor="@color/gray"></TextView>
-	<TextView android:layout_width="wrap_content" android:layout_height="wrap_content" android:layout_marginLeft="15dip" android:textSize="12dip" android:textStyle="bold" android:id="@+id/date" android:text="@string/widget_text" android:textColor="@color/gray"></TextView>
+    <TextView
+        android:id="@+id/textHeader"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginLeft="15dip"
+        android:layout_marginTop="10dip"
+        android:clickable="true"
+        android:text="@string/widget_header"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textColor="@color/fg_color"
+        android:textStyle="bold" >
+    </TextView>
 
+    <TextView
+        android:id="@+id/date"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dip"
+        android:text="@string/widget_text"
+        android:textColor="@color/accent1"
+        android:textSize="12dip"
+        android:textStyle="bold" >
+    </TextView>
 
-	<TextView
-		android:id="@+id/textMenu" android:layout_below="@+id/textHeader"
-		android:text="@string/widget_text"
-		android:layout_width="match_parent" android:layout_height="match_parent"
-		android:textSize="12dip" android:layout_marginLeft="15dip"
-		android:layout_marginRight="15dip" android:layout_marginBottom="12dip" android:textColor="@color/white"/>
-
+    <TextView
+        android:id="@+id/textMenu"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/textHeader"
+        android:layout_marginBottom="12dip"
+        android:layout_marginLeft="15dip"
+        android:layout_marginRight="15dip"
+        android:text="@string/widget_text"
+        android:textColor="@color/fg_color"
+        android:textSize="12dip" />
 
 </LinearLayout>

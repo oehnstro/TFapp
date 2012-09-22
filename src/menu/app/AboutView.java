@@ -1,6 +1,6 @@
 package menu.app;
 
-import menu.widget.R;
+import menu.app.R;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;

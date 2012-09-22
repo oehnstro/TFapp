@@ -1,6 +1,7 @@
 package menu.app;
 
 import java.sql.Date;
+import java.util.Calendar;
 
 import android.content.ContentValues;
 import android.content.Context;
@@ -93,8 +94,8 @@ public class LunchDatabase extends SQLiteOpenHelper {
 
 		Cursor cursor = db.query(TABLE_NAME, new String[] { KEY_ID, KEY_DATE,
 				KEY_MAIN, KEY_VEGE, KEY_SALAD, KEY_SOUP, KEY_ALACARTE,
-				KEY_EXTRA, KEY_WEEKDAY }, KEY_DATE + "=?", new String[] { date.toString() },
-				null, null, null, null);
+				KEY_EXTRA, KEY_WEEKDAY }, KEY_DATE + "=?",
+				new String[] { date.toString() }, null, null, null, null);
 
 		// If no results
 		if (cursor.getCount() < 1) {
@@ -123,7 +124,18 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		lunch.setWeekday(cursor.getString(8));
 
 		db.close();
-		
+
 		return lunch;
 	}
+
+	public LunchObject getCurrentLunch() {
+		Calendar today = Calendar.getInstance();
+		if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
+			today.add(Calendar.DATE, 2);
+		} else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
+			today.add(Calendar.DATE, 1);
+		}
+		return this.getLunch(today.getTime());
+	}
+
 }

@@ -3,7 +3,7 @@ package menu.app;
 import java.util.Calendar;
 import java.util.Date;
 
-import menu.widget.R;
+import menu.app.R;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
@@ -52,7 +52,7 @@ public class LunchView extends Activity {
 	private void updateMenu(){
 		TextView menu = (TextView) findViewById(R.id.lunchmenu);
 		TextView header = (TextView) findViewById(R.id.lunch_header);
-		LunchObject lunch = lunches.getLunch(this.getNextMealDate());
+		LunchObject lunch = lunches.getCurrentLunch();
 		if (lunch != null){
 			menu.setText(lunch.getMenuAsString());
 			header.setText(lunch.getWeekday() + " " + lunch.getDateShort());
@@ -63,14 +63,4 @@ public class LunchView extends Activity {
 		}
 	}
 	
-	private Date getNextMealDate(){
-		Calendar today = Calendar.getInstance();
-		if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY){
-			today.add(Calendar.DATE, 2);
-		} else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY){
-			today.add(Calendar.DATE, 1);	
-		}
-		System.out.println(today.getTime());
-		return today.getTime();
-	}
 }

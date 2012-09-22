@@ -14,9 +14,9 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import menu.widget.R;
-import menu.widget.R.id;
-import menu.widget.R.layout;
+import menu.app.R;
+import menu.app.R.id;
+import menu.app.R.layout;
 
 import android.app.IntentService;
 import android.appwidget.AppWidgetManager;

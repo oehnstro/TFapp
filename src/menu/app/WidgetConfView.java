@@ -11,9 +11,9 @@ import android.widget.Spinner;
 
 // Need the following import to get access to the app resources, since this
 // class is in a sub-package.
-import menu.widget.R;
-import menu.widget.R.id;
-import menu.widget.R.layout;
+import menu.app.R;
+import menu.app.R.id;
+import menu.app.R.layout;
 
 public class WidgetConfView extends Activity {
 

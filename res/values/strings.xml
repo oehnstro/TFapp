@@ -3,7 +3,7 @@
     <string name="app_name">TFapp Food Widget</string>
     <string name="widget_text">Loading...</string>
     <string name="app_description">Widget for displaying the menu at Teknologforeningen.</string>
-    <string name="widget_header">Täffä Menü</string>
+    <string name="widget_header">Today\'s menu</string>
     <string name="widget_update">Update</string>
     <string name="widget_conf_chooselang">Choose language</string>
     <string name="default_lang">en</string>

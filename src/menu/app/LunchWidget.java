@@ -1,8 +1,8 @@
 package menu.app;
 
-import menu.widget.R;
-import menu.widget.R.id;
-import menu.widget.R.layout;
+import menu.app.R;
+import menu.app.R.id;
+import menu.app.R.layout;
 import android.app.PendingIntent;
 import android.appwidget.AppWidgetManager;
 import android.appwidget.AppWidgetProvider;
@@ -45,8 +45,5 @@ public class LunchWidget extends AppWidgetProvider {
 	 RemoteViews updateViews = new RemoteViews("menu.app",
 				R.layout.menu_widget_main);
 
-		// Set temp text
-		updateViews.setTextViewText(R.id.textMenu, "...Loading...");
-		
 	}
 }
