@@ -128,14 +128,31 @@ public class LunchDatabase extends SQLiteOpenHelper {
 		return lunch;
 	}
 
-	public LunchObject getCurrentLunch() {
+	private LunchObject getNextLunch(int days) {
 		Calendar today = Calendar.getInstance();
 		if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SATURDAY) {
 			today.add(Calendar.DATE, 2);
 		} else if (today.get(Calendar.DAY_OF_WEEK) == Calendar.SUNDAY) {
 			today.add(Calendar.DATE, 1);
 		}
+		
+		
+		today.add(Calendar.DATE, days);
+		
 		return this.getLunch(today.getTime());
 	}
-
+	
+	public LunchObject getCurrentLunch(){
+		return this.getNextLunch(0);
+	}
+	
+	public LunchObject[] getWeek(){
+		LunchObject[] week = new LunchObject[5];
+		
+		for (int i = 0; i < week.length; i++){
+			week[i] = this.getNextLunch(i);
+		}
+		
+		return week;
+	}
 }
